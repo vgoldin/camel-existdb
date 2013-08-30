@@ -1,4 +1,4 @@
-import lt.itdbaltics.camel.camel.component.existdb.DatabaseFactory;
+import lt.itdbaltics.camel.component.existdb.DatabaseFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;

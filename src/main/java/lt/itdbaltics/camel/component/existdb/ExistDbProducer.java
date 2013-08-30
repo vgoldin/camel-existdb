@@ -1,4 +1,4 @@
-package lt.itdbaltics.camel.camel.component.existdb;
+package lt.itdbaltics.camel.component.existdb;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;

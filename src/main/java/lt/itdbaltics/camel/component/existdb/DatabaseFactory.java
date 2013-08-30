@@ -1,4 +1,4 @@
-package lt.itdbaltics.camel.camel.component.existdb;
+package lt.itdbaltics.camel.component.existdb;
 
 import org.exist.xmldb.DatabaseImpl;
 import org.xmldb.api.DatabaseManager;
