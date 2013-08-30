@@ -12,11 +12,7 @@
         </repository>
         <repository>
             <id>camel-eXist-db</id>
-            <url>https://raw.github.com/vgoldin/camel-existdb/mvn-repo/master/</url>
-        </repository>
-        <repository>
-            <id>gnu-crypto</id>
-            <url>http://dev.mapfish.org/maven/repository</url>
+            <url>https://raw.github.com/vgoldin/camel-existdb/master/mvn-repo/</url>
         </repository>
     </repositories>
 
