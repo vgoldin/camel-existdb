@@ -1,11 +1,9 @@
-package com.backbase.mashup.camel.component.existdb;
+package lt.itdbaltics.camel.camel.component.existdb;
 
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultPollingEndpoint;
-import org.exist.xmldb.EXistResource;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 
@@ -78,7 +76,8 @@ public class ExistDbEndpoint extends DefaultPollingEndpoint {
                 StringBuilder path = new StringBuilder();
 
                 for (int i = 0; i <= pathSegmentOffset; i++) {
-                    path.append("/" + pathSegments[i]);
+                    path.append("/");
+                    path.append(pathSegments[i]);
                 }
 
                 Collection start = DatabaseManager.getCollection(databaseUri + path, username, password);

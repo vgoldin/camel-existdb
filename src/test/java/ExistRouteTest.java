@@ -1,11 +1,9 @@
-import com.backbase.mashup.camel.component.existdb.DatabaseFactory;
+import lt.itdbaltics.camel.camel.component.existdb.DatabaseFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
-import org.exist.xmldb.DatabaseImpl;
 import org.junit.Test;
-import org.xmldb.api.DatabaseManager;
 
 import java.util.List;
 
@@ -43,8 +41,8 @@ public class ExistRouteTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() throws Exception {
-                from("direct:start").to("xmldb:exist:///db/launchpad/accounts?username=admin&password=");
-                from("direct:query").to("xmldb:exist:///db/launchpad/accounts?XPath=/account[@partyId = '3']&username=admin&password=").to("log:debug?showAll=true").to("mock:results");
+                from("direct:start").to("xmldb:exist:///db/test/accounts?username=admin&password=");
+                from("direct:query").to("xmldb:exist:///db/test/accounts?XPath=/account[@partyId = '3']&username=admin&password=").to("log:debug?showAll=true").to("mock:results");
             }
         };
     }

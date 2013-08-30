@@ -1,11 +1,10 @@
-package com.backbase.mashup.camel.component.existdb;
+package lt.itdbaltics.camel.camel.component.existdb;
 
 import org.apache.camel.util.ObjectHelper;
 import org.exist.xmldb.EXistResource;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XPathQueryService;
 
-import java.util.List;
 import java.util.Vector;
 
 public class QueryService {
@@ -56,7 +55,7 @@ public class QueryService {
 
             try {
                 ((EXistResource) resource).freeResources();
-            } catch (XMLDBException ex) {};
+            } catch (XMLDBException ex) {}
         }
 
         return result;

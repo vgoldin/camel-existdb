@@ -1,4 +1,4 @@
-package com.backbase.mashup.camel.component.existdb;
+package lt.itdbaltics.camel.camel.component.existdb;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
@@ -6,8 +6,6 @@ import org.exist.xmldb.EXistResource;
 import org.w3c.dom.Node;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XMLResource;
-import org.xmldb.api.modules.XPathQueryService;
-import org.xmldb.api.modules.XQueryService;
 
 import java.util.Vector;
 
@@ -69,13 +67,8 @@ public class ExistDbProducer extends DefaultProducer {
         try {
             collection.storeResource(document);
         } finally {
-            if (document != null) {
-                try { ((EXistResource) document).freeResources(); } catch (XMLDBException ex) {}
-            }
-
-            if (collection != null) {
-                try { collection.close(); } catch (XMLDBException ex) {}
-            }
+            try { ((EXistResource) document).freeResources(); } catch (XMLDBException ex) {}
+            try { collection.close(); } catch (XMLDBException ex) {}
         }
 
         return document;

@@ -1,14 +1,9 @@
-package com.backbase.mashup.camel.component.existdb;
+package lt.itdbaltics.camel.camel.component.existdb;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
-import org.xmldb.api.DatabaseManager;
-import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.modules.CollectionManagementService;
 
 public class ExistDbComponent extends DefaultComponent {
     @Override

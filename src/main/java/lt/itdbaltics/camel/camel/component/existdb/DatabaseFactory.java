@@ -1,4 +1,4 @@
-package com.backbase.mashup.camel.component.existdb;
+package lt.itdbaltics.camel.camel.component.existdb;
 
 import org.exist.xmldb.DatabaseImpl;
 import org.xmldb.api.DatabaseManager;
