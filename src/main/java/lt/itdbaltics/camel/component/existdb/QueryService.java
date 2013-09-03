@@ -2,46 +2,45 @@ package lt.itdbaltics.camel.component.existdb;
 
 import org.apache.camel.util.ObjectHelper;
 import org.exist.xmldb.EXistResource;
+import org.exist.xmldb.XQueryService;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XPathQueryService;
 
 import java.util.Vector;
 
 public class QueryService {
-    private static final String QUERY_SERVICE_VERSION = "1.0";
-    private static final String QUERY_SERVICE_NAME = "XPathQueryService";
-
     private Collection collection;
-    private XPathQueryService service;
+    private QueryServiceType serviceType;
 
-    public QueryService(Collection collection){
+    public QueryService(Collection collection, QueryServiceType serviceType){
         this.collection = collection;
-
-        initQueryService();
+        this.serviceType = serviceType;
     }
 
-    private XPathQueryService initQueryService() {
-        try {
-            service = (XPathQueryService) collection.getService(QUERY_SERVICE_NAME, QUERY_SERVICE_VERSION);
+    private ResourceIterator createResourceIterator(String query) throws XMLDBException {
+        ResourceSet resourceSet;
+
+        if (query == null) {
+            ObjectHelper.notNull(query, "query");
+        }
+
+        if (serviceType.equals(QueryServiceType.XPATH)) {
+            XPathQueryService service = (XPathQueryService) collection.getService(serviceType.getServiceName(),
+                        serviceType.getVersion());
             service.setProperty("indent", "yes");
 
-            return service;
-        } catch (XMLDBException ex) {
-            throw new CamelExistDbException(ex);
-        }
-    }
+            resourceSet = service.query(query);
+        } else if (serviceType.equals(QueryServiceType.XQUERY)) {
+            XQueryService service = (XQueryService) collection.getService(serviceType.getServiceName(),
+                    serviceType.getVersion());
+            service.setProperty("indent", "yes");
 
-    private ResourceIterator createResourceIterator(String xpath) throws XMLDBException {
-        ResourceIterator iterator = null;
-
-        if (xpath != null) {
-            ResourceSet resourceSet = service.query(xpath);
-            iterator = resourceSet.getIterator();
+            resourceSet = service.query(query);
         } else {
-            ObjectHelper.notNull(xpath, "xpath");
+            throw new IllegalArgumentException("Unsupported QueryService type is requested. " + serviceType);
         }
 
-        return iterator;
+        return resourceSet.getIterator();
     }
 
     public Vector<Object> query(String xpath) throws XMLDBException {
@@ -50,7 +49,6 @@ public class QueryService {
 
         while (resourceIterator.hasMoreResources()) {
             Resource resource = resourceIterator.nextResource();
-
             result.add(resource.getContent());
 
             try {

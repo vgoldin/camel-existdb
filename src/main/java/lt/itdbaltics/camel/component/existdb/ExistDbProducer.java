@@ -26,12 +26,20 @@ public class ExistDbProducer extends DefaultProducer {
             collection = endpoint.getCollection();
 
             String xPath = endpoint.getXPath();
+            String xQuery = exchange.getIn().getHeader("XMLDB_XQUERY_EXPRESSION", String.class);
+
             if (xPath != null) {
-                QueryService service = new QueryService(collection);
+                QueryService service = new QueryService(collection, QueryServiceType.XPATH);
 
                 Vector<Object> results = service.query(xPath);
                 exchange.getIn().setBody(results);
+            } else if (xQuery != null) {
+                QueryService service = new QueryService(collection, QueryServiceType.XQUERY);
+
+                Vector<Object> results = service.query(xQuery);
+                exchange.getIn().setBody(results);
             } else {
+                //FIXME: Make storing explicit by providing a camel header with the operation name
                 resource = storeResource(exchange, collection);
             }
         } finally {
