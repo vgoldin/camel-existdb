@@ -2,7 +2,8 @@ package lt.itdbaltics.camel.component.existdb;
 
 public enum QueryServiceType {
     XPATH("XPathQueryService", "1.0"),
-    XQUERY("XQueryService", "1.0");
+    XQUERY("XQueryService", "1.0"),
+    XUPDATE("XUpdateQueryService", "1.0");
 
     private String version;
     private String serviceName;

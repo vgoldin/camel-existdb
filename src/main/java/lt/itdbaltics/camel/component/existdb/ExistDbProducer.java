@@ -1,13 +1,12 @@
 package lt.itdbaltics.camel.component.existdb;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.impl.DefaultProducer;
 import org.exist.xmldb.EXistResource;
 import org.w3c.dom.Node;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XMLResource;
-
-import java.util.Vector;
 
 public class ExistDbProducer extends DefaultProducer {
     private ExistDbEndpoint endpoint;
@@ -26,17 +25,29 @@ public class ExistDbProducer extends DefaultProducer {
             collection = endpoint.getCollection();
 
             String xPath = endpoint.getXPath();
-            String xQuery = exchange.getIn().getHeader("XMLDB_XQUERY_EXPRESSION", String.class);
+            String xmldbServiceType =  exchange.getIn().getHeader("XMLDB_SERVICE_TYPE", String.class);
 
             if (xPath != null) {
                 QueryService service = new QueryService(collection, QueryServiceType.XPATH);
 
-                Vector<Object> results = service.query(xPath);
+                Object results = service.query(xPath);
                 exchange.getIn().setBody(results);
-            } else if (xQuery != null) {
-                QueryService service = new QueryService(collection, QueryServiceType.XQUERY);
+            } else if (xmldbServiceType != null) {
+                QueryServiceType serviceType = QueryServiceType.valueOf(xmldbServiceType);
+                QueryService service = new QueryService(collection, serviceType);
 
-                Vector<Object> results = service.query(xQuery);
+                String queryExpression = exchange.getIn().getBody(String.class);
+                if (queryExpression == null) {
+                    throw new RuntimeCamelException("Exchange body is empty. Expected XMLDB query expression.");
+                }
+
+                Object results;
+                if (serviceType.equals(QueryServiceType.XUPDATE)) {
+                    results = service.update(queryExpression);
+                } else {
+                    results = service.query(queryExpression);
+                }
+
                 exchange.getIn().setBody(results);
             } else {
                 //FIXME: Make storing explicit by providing a camel header with the operation name

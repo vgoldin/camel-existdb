@@ -5,6 +5,7 @@ import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.XQueryService;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XPathQueryService;
+import org.xmldb.api.modules.XUpdateQueryService;
 
 import java.util.Vector;
 
@@ -43,9 +44,10 @@ public class QueryService {
         return resourceSet.getIterator();
     }
 
-    public Vector<Object> query(String xpath) throws XMLDBException {
+    public Object query(String xpath) throws XMLDBException {
         ResourceIterator resourceIterator = createResourceIterator(xpath);
         Vector<Object> result = new Vector<Object>();
+        Object answer;
 
         while (resourceIterator.hasMoreResources()) {
             Resource resource = resourceIterator.nextResource();
@@ -56,6 +58,22 @@ public class QueryService {
             } catch (XMLDBException ex) {}
         }
 
-        return result;
+        if (result.size() == 1) {
+            answer = result.get(0);
+        } else {
+            answer = result;
+        }
+
+        return answer;
+    }
+
+    public Object update(String queryExpression) throws XMLDBException {
+        XUpdateQueryService service =
+                (XUpdateQueryService) collection.getService(serviceType.getServiceName(),
+                        serviceType.getVersion());
+        service.setProperty("indent", "yes");
+
+
+        return service.update(queryExpression);
     }
 }
