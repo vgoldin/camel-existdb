@@ -10,7 +10,7 @@ import org.xmldb.api.modules.XMLResource;
 
 public class ExistDbProducer extends DefaultProducer {
     private ExistDbEndpoint endpoint;
-    
+
     public ExistDbProducer(ExistDbEndpoint endpoint) {
         super(endpoint);
         
@@ -28,13 +28,13 @@ public class ExistDbProducer extends DefaultProducer {
             String xmldbServiceType =  exchange.getIn().getHeader("XMLDB_SERVICE_TYPE", String.class);
 
             if (xPath != null) {
-                QueryService service = new QueryService(collection, QueryServiceType.XPATH);
+                QueryService service = endpoint.getQueryServiceFactory().createQueryService(collection, QueryServiceType.XPATH);
 
                 Object results = service.query(xPath);
                 exchange.getIn().setBody(results);
             } else if (xmldbServiceType != null) {
                 QueryServiceType serviceType = QueryServiceType.valueOf(xmldbServiceType);
-                QueryService service = new QueryService(collection, serviceType);
+                QueryService service = endpoint.getQueryServiceFactory().createQueryService(collection, serviceType);
 
                 String queryExpression = exchange.getIn().getBody(String.class);
                 if (queryExpression == null) {
@@ -56,7 +56,9 @@ public class ExistDbProducer extends DefaultProducer {
         } finally {
             if (resource != null) {
                 try {
-                    ((EXistResource) resource).freeResources();
+                    if (resource instanceof EXistResource) {
+                        ((EXistResource) resource).freeResources();
+                    }
                 } catch (XMLDBException ex) {
                     // -- ignore
                 }
@@ -86,7 +88,11 @@ public class ExistDbProducer extends DefaultProducer {
         try {
             collection.storeResource(document);
         } finally {
-            try { ((EXistResource) document).freeResources(); } catch (XMLDBException ex) {}
+            try {
+                if (document instanceof EXistResource) {
+                    ((EXistResource) document).freeResources();
+                }
+            } catch (XMLDBException ex) {}
             try { collection.close(); } catch (XMLDBException ex) {}
         }
 

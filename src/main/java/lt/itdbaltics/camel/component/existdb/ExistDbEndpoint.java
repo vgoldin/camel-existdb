@@ -16,6 +16,8 @@ public class ExistDbEndpoint extends DefaultPollingEndpoint {
     private String databaseUri;
     private String collectionUri;
 
+    private QueryServiceFactory queryServiceFactory;
+
     public ExistDbEndpoint(String uri, String remaining, ExistDbComponent component) throws Exception {
         super(uri, component);
 
@@ -57,6 +59,18 @@ public class ExistDbEndpoint extends DefaultPollingEndpoint {
 
     public String getPassword() {
         return password;
+    }
+
+    public QueryServiceFactory getQueryServiceFactory() {
+        if (queryServiceFactory == null) {
+            queryServiceFactory = new QueryServiceFactory();
+        }
+
+        return queryServiceFactory;
+    }
+
+    public void setQueryServiceFactory(QueryServiceFactory queryServiceFactory) {
+        this.queryServiceFactory = queryServiceFactory;
     }
 
     private Collection getOrCreateCollection(String collectionUri, int pathSegmentOffset) throws

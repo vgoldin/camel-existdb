@@ -16,9 +16,6 @@ public class DatabaseFactory {
             database.setProperty("configuration", "conf.xml");
 
             DatabaseManager.registerDatabase(database);
-
-            //FIXME: Externalize database URL
-            current = DatabaseManager.getCollection("xmldb:exist:///db");
         }
     }
 

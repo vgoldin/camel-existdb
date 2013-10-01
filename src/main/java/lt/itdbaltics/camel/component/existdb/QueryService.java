@@ -13,7 +13,7 @@ public class QueryService {
     private Collection collection;
     private QueryServiceType serviceType;
 
-    public QueryService(Collection collection, QueryServiceType serviceType){
+    protected QueryService(Collection collection, QueryServiceType serviceType){
         this.collection = collection;
         this.serviceType = serviceType;
     }
@@ -47,7 +47,7 @@ public class QueryService {
     public Object query(String xpath) throws XMLDBException {
         ResourceIterator resourceIterator = createResourceIterator(xpath);
         Vector<Object> result = new Vector<Object>();
-        Object answer;
+        Object answer = null;
 
         while (resourceIterator.hasMoreResources()) {
             Resource resource = resourceIterator.nextResource();
@@ -60,7 +60,7 @@ public class QueryService {
 
         if (result.size() == 1) {
             answer = result.get(0);
-        } else {
+        } else if (result.size() > 1) {
             answer = result;
         }
 
