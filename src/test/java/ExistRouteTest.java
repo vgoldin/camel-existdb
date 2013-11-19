@@ -13,7 +13,7 @@ public class ExistRouteTest extends CamelTestSupport {
 
     @Test
     public void testSendMessagesIntoEsper() throws Exception {
-        template.sendBody("direct:start", "<account partyId='3'><bban>123123</bban></account>");
+        template.sendBody("direct:start", "<account partyId='3'><bban>Тест</bban></account>");
 
         MockEndpoint endpoint = getMockEndpoint("mock:results");
         endpoint.expectedMessageCount(1);

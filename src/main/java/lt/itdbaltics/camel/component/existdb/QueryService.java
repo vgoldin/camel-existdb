@@ -4,6 +4,7 @@ import org.apache.camel.util.ObjectHelper;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.XQueryService;
 import org.xmldb.api.base.*;
+import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 
@@ -51,7 +52,12 @@ public class QueryService {
 
         while (resourceIterator.hasMoreResources()) {
             Resource resource = resourceIterator.nextResource();
-            result.add(resource.getContent());
+
+            if (resource instanceof XMLResource) {
+                result.add(((XMLResource) resource).getContentAsDOM());
+            } else {
+                result.add(resource.getContent());
+            }
 
             try {
                 ((EXistResource) resource).freeResources();
