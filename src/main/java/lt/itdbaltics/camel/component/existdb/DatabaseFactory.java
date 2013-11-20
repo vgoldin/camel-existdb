@@ -2,38 +2,46 @@ package lt.itdbaltics.camel.component.existdb;
 
 import org.exist.xmldb.DatabaseImpl;
 import org.exist.xmldb.DatabaseInstanceManager;
+import org.exist.xmldb.XmldbURI;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 
 public class DatabaseFactory {
     private static DatabaseImpl database;
     private static Collection current;
+    private static Boolean started = false;
 
     public DatabaseFactory() throws Exception {
-        if (database == null) {
-            database = new DatabaseImpl();
-            database.setProperty("create-database", "true");
-            database.setProperty("configuration", "conf.xml");
+        synchronized (started) {
+            if (database == null) {
+                database = new DatabaseImpl();
+                database.setProperty("create-database", "true");
 
-            DatabaseManager.registerDatabase(database);
+                current = database.getCollection(XmldbURI.EMBEDDED_SERVER_URI, null, null);
+                DatabaseManager.registerDatabase(database);
+                started  = true;
+            }
         }
     }
 
     public void destroy() {
-        if (database != null) {
-            try {
-                if (current != null) {
-                    final DatabaseInstanceManager mgr = (DatabaseInstanceManager) current.getService("DatabaseInstanceManager", "1.0");
+        synchronized (started) {
+            if (database != null) {
+                try {
+                    if (current != null) {
+                        final DatabaseInstanceManager mgr = (DatabaseInstanceManager) current.getService("DatabaseInstanceManager", "1.0");
 
-                    if (mgr != null && mgr.isLocalInstance()) {
-                        mgr.shutdown();
+                        if (mgr != null && mgr.isLocalInstance()) {
+                            mgr.shutdown();
+                        }
                     }
-                }
 
-                DatabaseManager.deregisterDatabase(database);
-                database = null;
-            } catch (Exception ex) {
-                // -- ignore
+                    DatabaseManager.deregisterDatabase(database);
+                    database = null;
+                    started = false;
+                } catch (Exception ex) {
+                    // -- ignore
+                }
             }
         }
     }
