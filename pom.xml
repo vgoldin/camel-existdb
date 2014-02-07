@@ -68,6 +68,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.exist-db</groupId>
+            <artifactId>existdb-optional</artifactId>
+            <version>${existdb.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.gnu</groupId>
             <artifactId>gnu-crypto</artifactId>
             <version>${gnu-crypto.version}</version>
