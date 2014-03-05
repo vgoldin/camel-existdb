@@ -66,6 +66,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.exist-db</groupId>
+            <artifactId>existdb-start</artifactId>
+            <version>${existdb.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.exist-db</groupId>
