@@ -10,12 +10,21 @@ public class DatabaseFactory {
     private static DatabaseImpl database;
     private static Collection current;
     private static Boolean started = false;
+    private String configuration;
 
-    public DatabaseFactory() throws Exception {
+    public DatabaseFactory() {
+
+    }
+
+    public void start() throws Exception {
         synchronized (started) {
             if (database == null) {
                 database = new DatabaseImpl();
                 database.setProperty("create-database", "true");
+
+                if (configuration != null && configuration.length() > 0) {
+                    database.setProperty("configuration", configuration);
+                }
 
                 current = database.getCollection(XmldbURI.EMBEDDED_SERVER_URI, null, null);
                 DatabaseManager.registerDatabase(database);
@@ -44,5 +53,9 @@ public class DatabaseFactory {
                 }
             }
         }
+    }
+
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
     }
 }

@@ -31,6 +31,8 @@ public class ExistRouteTest extends CamelTestSupport {
     @Override
     public void setUp() throws Exception {
         factory = new DatabaseFactory();
+        factory.setConfiguration("conf.xml");
+        factory.start();
 
         super.setUp();
     }
